@@ -1,0 +1,31 @@
+.stats{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-block: 1.5rem;
+
+    .stat{
+        width: calc(50% - .5rem);
+        background-color: #C7C7C799;
+        text-align: left;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 3px 3px 3px rgba(77, 76, 76, 0.253);
+
+        &.red{
+            background-color: #f1a59457;
+        }
+
+        h4{
+            margin-bottom: .25rem;
+            font-weight: 500;
+        }
+        @media screen and (max-width: 900px) {
+            width: 100%;
+        }
+    }
+    @media screen and (max-width: 1080px) {
+        flex-wrap: wrap;
+    }
+}

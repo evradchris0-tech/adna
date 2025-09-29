@@ -1,0 +1,104 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --main: #631E0F;
+  --white: #fff;
+  --text-color: #000000;
+  --danger: #e64d4d;
+  --gold-color: #F3C84F;
+  --grey-dark-1: #C7C7C7;
+  --grey-dark-2: #E5E5E5;
+  --grey-dark-3: #00000029;
+  --grey-dark-4: #00000080;
+  --grey-dark-5: #9491911c;
+  --black-1: #212529;
+  --border-radius: 5px;
+  --box-shadows: 0px 1px 2px #0000004D;
+  --transition-delay: .3s;
+  --stat-width: 50%;
+  --negative-stat-width: -50%;
+  --radius: 0;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-size: .85rem;
+  font-weight: 400;
+  color: var(--text-clr);
+  line-height: 1.5;
+  background-color: var(--white);
+  min-height: 100vh;
+}
+.select2-container--default * {
+    font-family: "Montserrat", sans-serif !important;
+}
+.select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+.select2-container {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: .85rem;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    margin-left: -8px;
+    margin-top: 2px;
+}
+select,
+input,
+button{
+font-family: "Montserrat", sans-serif;
+}
+select,
+input{
+  font-size: .8rem;
+}
+@media screen and (min-width: 780px) {
+
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  *::-webkit-scrollbar-track-piece,
+  *::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px transparent;
+    border-radius: 5px;
+  }
+
+  *::-webkit-scrollbar-thumb,
+  *::-webkit-scrollbar-thumb:vertical {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(37, 35, 35, 0.541);
+  }
+}
+
+img {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+ul {
+  list-style: none;
+}
+
+a,
+a:hover {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+// global input style

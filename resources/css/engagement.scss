@@ -1,0 +1,39 @@
+.stat_cards{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .stat{
+        width: calc(50% - 1rem);
+        background-color: #C7C7C799;
+        text-align: left;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 3px 3px 3px rgba(77, 76, 76, 0.253);
+
+        &.red{
+            background-color: #f1a59457;
+        }
+
+        h4{
+            margin-bottom: .25rem;
+            font-weight: 500;
+        }
+        @media screen and (max-width: 900px) {
+            width: 100%;
+        }
+    }
+    @media screen and (max-width: 1080px) {
+        flex-wrap: wrap;
+    }
+}
+@media screen and (max-width: 350px) {
+    .add_block{
+        flex-wrap: wrap;
+        .btn{
+            width: 100%;
+        }
+    }
+}

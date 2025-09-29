@@ -1,0 +1,54 @@
+@use 'components/stats.scss';
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+
+    tr {
+
+      td {
+        padding: .95rem 1rem;
+        font-weight: 500;
+        font-size: .8rem;
+        text-align: left;
+        border-bottom: solid 1px rgba(184, 183, 183, 0.397);
+
+        &:is(:first-of-type) {
+          padding-left: 0;
+        }
+
+        span {
+          width: 200px;
+          overflow: hidden;
+          text-align: left;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          &:first-of-type {
+            width: auto;
+          }
+        }
+
+      }
+    }
+
+
+}
+
+.card-stat{
+    background-color: #d9d9d9;
+
+    span{
+        font-weight: 700;
+    }
+
+    table tr td {
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+    table tr th {
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+}
