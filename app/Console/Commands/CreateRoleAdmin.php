@@ -40,27 +40,50 @@ class CreateRoleAdmin extends Command
      */
     public function handle()
     {
-
-
+        // 1. Récupérer toutes les permissions
         $permissions = Permission::pluck('id', 'id')->all();
 
-        $role = Role::count() > 0 ? Role::where('id',1)->first() : Role::create(['name' => 'admin']);
+        // 2. Créer ou récupérer le rôle admin
+        $role = Role::firstOrCreate(
+            ['name' => 'admin'],
+            ['guard_name' => 'web']
+        );
+        
+        // 3. Synchroniser toutes les permissions avec le rôle admin
         $role->syncPermissions($permissions);
 
-        if (User::count() == 0) {
+        $this->info('Role admin créé avec ' . count($permissions) . ' permissions.');
+
+        // 4. Créer ou récupérer l'utilisateur admin
+        $user = User::where('email', 'admin@admin.com')->first();
+
+        if (!$user) {
+            // L'utilisateur n'existe pas, on le crée
             $user = User::create([
-                'phone' => fake()->phoneNumber(),
-                'email' => "admin@admin.com",
-                'firstname' => 'admin',
-                'lastname' => 'admin',
+                'phone' => '237' . rand(600000000, 699999999),
+                'email' => 'admin@admin.com',
+                'firstname' => 'Admin',
+                'lastname' => 'Système',
                 'email_verified_at' => now(),
                 'remember_token' => Str::random(10),
                 'password' => Hash::make('admin123')
             ]);
-        }else{
-            $user = User::where("email", "admin@admin.com")->first();
+            
+            $this->info('Utilisateur admin créé avec succès.');
+            $this->info('Email: admin@admin.com');
+            $this->info('Mot de passe: admin123');
+        } else {
+            $this->info('Utilisateur admin déjà existant.');
         }
-        $user->assignRole([$role->id]);
-        $this->info('user and role admin added successfully.');
+
+        // 5. Assigner le rôle admin à l'utilisateur
+        if (!$user->hasRole('admin')) {
+            $user->assignRole($role);
+            $this->info('Rôle admin assigné à l\'utilisateur.');
+        } else {
+            $this->info('L\'utilisateur possède déjà le rôle admin.');
+        }
+
+        $this->info('✅ Configuration terminée avec succès !');
     }
 }
