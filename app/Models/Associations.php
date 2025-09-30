@@ -29,7 +29,7 @@ class Associations extends Model
     {
         $d = Offrande::where("association_id", $this->id)->orderBy('offrande_day', 'desc')->get();
         $v = count($d) == 0 ? 0 : $d[0]->somme;
-        return $v == 0 ? "0 FCFA" : formatNumber($v)." FCFA le ( ".$d[0]->offrande_day.")";
+        return $v == 0 ? "0 FCFA" : formatNumber($v) . " FCFA le ( " . $d[0]->offrande_day . ")";
     }
 
     public function paroissiens()
@@ -41,7 +41,8 @@ class Associations extends Model
         return $this->hasMany(Offrande::class, 'association_id');
     }
 
-    public static function getPaiementStat($type,$istotal = false){
+    public static function getPaiementStat($type, $istotal = false)
+    {
         $associations = Associations::with('paroissiens')->get();
         $assoStat = [];
         foreach ($associations as $key => $asso) {
@@ -58,13 +59,13 @@ class Associations extends Model
                     if ($type == "dime") {
                         $totalEngagement['total'] = $totalEngagement['total'] + $engagement->dime;
                         $totalEngagement['recu'] = $totalEngagement['recu'] + $engagement->available_dime;
-                    }elseif ($type == "dette_dime") {
+                    } elseif ($type == "dette_dime") {
                         $totalEngagement['total'] = $totalEngagement['total'] + $engagement->dette_dime;
                         $totalEngagement['recu'] = $totalEngagement['recu'] + $engagement->available_dette_dime;
-                    }elseif ($type == "dette_cotisation") {
+                    } elseif ($type == "dette_cotisation") {
                         $totalEngagement['total'] = $totalEngagement['total'] + $engagement->dette_cotisation;
                         $totalEngagement['recu'] = $totalEngagement['recu'] + $engagement->available_dette_cotisation;
-                    }else{
+                    } else {
                         $totalEngagement['total'] = $totalEngagement['total'] + $engagement->cotisation;
                         $totalEngagement['recu'] = $totalEngagement['recu'] + $engagement->available_cotisation;
                     }
@@ -72,10 +73,10 @@ class Associations extends Model
             }
 
             array_push($assoStat, [
-                "id"=> $asso->id,
-                "sigle"=> $asso->sigle,
+                "id" => $asso->id,
+                "sigle" => $asso->sigle,
                 "data" => $totalEngagement,
-                "percent" => round(($totalEngagement['total'] == 0 ? 0 : $totalEngagement['recu']/$totalEngagement['total'])*100,2)
+                "percent" => round(($totalEngagement['total'] == 0 ? 0 : $totalEngagement['recu'] / $totalEngagement['total']) * 100, 2)
             ]);
         }
 
@@ -88,7 +89,7 @@ class Associations extends Model
             }
             $total = $total == 0 ? 1 : $total;
             return [
-                "percent" => round(($recu/$total)*100, 2),
+                "percent" => round(($recu / $total) * 100, 2),
                 "total" => $total,
                 "solde" => $recu,
             ];
@@ -96,7 +97,8 @@ class Associations extends Model
         return $assoStat;
     }
 
-    public function getPerformanceAttribute(){
+    public function getPerformanceAttribute()
+    {
         $paroissiens = Paroissien::with("engagements")->where('association_id', $this->attributes['id'])->get();
         $data = [
             "dime" => 0,
@@ -122,18 +124,19 @@ class Associations extends Model
             $data["detteCotisationR"] += $paroissien->performance['detteCotisationR'];
             $data["cotisationR"] += $paroissien->performance['cotisationR'];
         }
-        $total = $data["dime"]+$data["cotisation"]+$data["detteDime"]+$data["detteCotisation"];
-        $data["taux"] = round(100*($data["dimeR"]+$data["cotisationR"]+$data["detteDimeR"]+$data["detteCotisationR"])/($total == 0 ? 1 : $total), 2);
-        $data["tauxCotisation"] = round(100*($data["cotisationR"])/($data["cotisation"] == 0 ? 1 : $data["cotisation"]), 2);
-        $data["tauxDime"] = round(100*($data["dimeR"])/($data["dime"] == 0 ? 1 : $data["dime"]), 2);
-        $data["tauxDetteDimeR"] = round(100*($data["detteDimeR"])/($data["detteDime"] == 0 ? 1 : $data["detteDime"]), 2);
-        $data["tauxDetteCotisationR"] = round(100*($data["detteCotisationR"])/($data["detteCotisation"] == 0 ? 1 : $data["detteCotisation"]), 2);
+        $total = $data["dime"] + $data["cotisation"] + $data["detteDime"] + $data["detteCotisation"];
+        $data["taux"] = round(100 * ($data["dimeR"] + $data["cotisationR"] + $data["detteDimeR"] + $data["detteCotisationR"]) / ($total == 0 ? 1 : $total), 2);
+        $data["tauxCotisation"] = round(100 * ($data["cotisationR"]) / ($data["cotisation"] == 0 ? 1 : $data["cotisation"]), 2);
+        $data["tauxDime"] = round(100 * ($data["dimeR"]) / ($data["dime"] == 0 ? 1 : $data["dime"]), 2);
+        $data["tauxDetteDimeR"] = round(100 * ($data["detteDimeR"]) / ($data["detteDime"] == 0 ? 1 : $data["detteDime"]), 2);
+        $data["tauxDetteCotisationR"] = round(100 * ($data["detteCotisationR"]) / ($data["detteCotisation"] == 0 ? 1 : $data["detteCotisation"]), 2);
 
 
         return $data;
     }
 
-    public static function newAssociation(array $data){
+    public static function newAssociation(array $data)
+    {
         try {
 
             // check if the association exist
@@ -151,5 +154,49 @@ class Associations extends Model
             dd($th);
             return 0;
         }
+    }
+
+    /**
+     * Relations many-to-many avec les utilisateurs
+     */
+    /**
+     * Relations many-to-many avec les utilisateurs
+     */
+    public function users()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_associations',
+            'association_id',          // ✅ Clé étrangère pour ce modèle
+            'user_id'                  // Clé étrangère pour le modèle lié
+        )
+            ->withPivot('is_primary', 'role_in_association')
+            ->withTimestamps();
+    }
+
+    /**
+     * Obtenir les gestionnaires de l'association
+     */
+    public function managers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_associations',
+            'association_id',          // ✅ Clé étrangère
+            'user_id'
+        )
+            ->withPivot('is_primary', 'role_in_association')
+            ->whereHas('roles', function ($query) {
+                $query->whereIn('name', ['gestionnaire', 'responsable_association']);
+            })
+            ->withTimestamps();
+    }
+
+    /**
+     * Vérifier si un utilisateur a accès à cette association
+     */
+    public function hasUser($userId): bool
+    {
+        return $this->users()->where('user_id', $userId)->exists();
     }
 }

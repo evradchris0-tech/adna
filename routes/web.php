@@ -28,7 +28,7 @@ use function Termwind\render;
 |
 */
 
-Route::middleware(['guest'])->group(function(){
+Route::middleware(['guest'])->group(function () {
     Route::get('/recover', [AuthController::class, 'recoverView'])->name('recover');
     Route::post('/recover', [AuthController::class, 'recover'])->name('recoverAction');
     Route::get('/reinitialise/{token}', [AuthController::class, 'reinitialiseView'])->name('reinitialiser');
@@ -39,7 +39,7 @@ Route::middleware(['guest'])->group(function(){
     Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 });
 
-Route::middleware(['auth','permission'])->group(function(){
+Route::middleware(['auth', 'permission'])->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::get('', [DashboardController::class, 'index'])->name('index');
     });
@@ -48,6 +48,10 @@ Route::middleware(['auth','permission'])->group(function(){
         Route::get('/pdf', [AssociationController::class, 'downlodPdf'])->name('print');
         Route::prefix('{id}/offrandes')->name('offrande.')->group(function () {
             Route::get('', [OffrandeController::class, 'index'])->name('index');
+        });
+        Route::prefix('user/associations')->name('user.associations.')->group(function () {
+            Route::post('/switch', [AssociationSwitchController::class, 'switch'])->name('switch');
+            Route::post('/set-primary', [AssociationSwitchController::class, 'setPrimary'])->name('setPrimary');
         });
     });
     Route::prefix('engagements')->name('engagement.')->group(function () {
