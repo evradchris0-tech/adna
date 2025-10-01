@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * 📁 EMPLACEMENT: app/Models/User.php
+ * 
+ * Modèle User avec support multi-associations
+ */
+
 namespace App\Models;
 
 use App\Http\Resources\PermissionResource;
@@ -39,22 +45,23 @@ class User extends Authenticatable implements MustVerifyEmail
         return url('/') . '/storage/' . $this->attributes['profil'];
     }
 
-    /**
-     * Relations many-to-many avec les associations
-     */
+    // ==========================================
+    // 🆕 MÉTHODES MULTI-ASSOCIATIONS
+    // ==========================================
+
     /**
      * Relations many-to-many avec les associations
      */
     public function associations()
     {
         return $this->belongsToMany(
-            Associations::class,      // Modèle lié
-            'user_associations',       // Table pivot
-            'user_id',                 // Clé étrangère dans la table pivot pour ce modèle
-            'association_id'           // ✅ Clé étrangère dans la table pivot pour le modèle lié
+            Associations::class,
+            'user_associations',
+            'user_id',
+            'association_id'
         )
-            ->withPivot('is_primary', 'role_in_association')
-            ->withTimestamps();
+        ->withPivot('is_primary', 'role_in_association')
+        ->withTimestamps();
     }
 
     /**
@@ -68,13 +75,13 @@ class User extends Authenticatable implements MustVerifyEmail
             'user_id',
             'association_id'
         )
-            ->withPivot('is_primary', 'role_in_association')
-            ->wherePivot('is_primary', true)
-            ->withTimestamps();
+        ->withPivot('is_primary', 'role_in_association')
+        ->wherePivot('is_primary', true)
+        ->withTimestamps();
     }
 
     /**
-     * Obtenir l'association principale (relation)
+     * Obtenir l'association principale (attribut)
      */
     public function getPrimaryAssociationAttribute()
     {

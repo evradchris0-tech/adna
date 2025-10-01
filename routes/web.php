@@ -14,6 +14,8 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\VersementController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserAssociationsController;
+use App\Http\Controllers\AssociationSwitchController;
 
 use function Termwind\render;
 
@@ -116,4 +118,19 @@ Route::middleware(['auth', 'permission'])->group(function () {
 
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::middleware(['auth', 'check.association'])->group(function () {
+
+        // Gestion des associations de l'utilisateur
+        Route::prefix('user/associations')->name('user.associations.')->group(function () {
+            Route::get('/', [UserAssociationsController::class, 'index'])->name('index');
+            Route::post('/attach', [UserAssociationsController::class, 'attach'])->name('attach');
+            Route::delete('/detach', [UserAssociationsController::class, 'detach'])->name('detach');
+            Route::post('/set-primary', [UserAssociationsController::class, 'setPrimary'])->name('set-primary');
+            Route::post('/update-role', [UserAssociationsController::class, 'updateRole'])->name('update-role');
+        });
+
+        // Changement d'association active (déjà existant, mais je le mets pour référence)
+        Route::post('/switch-association', [AssociationSwitchController::class, 'switch'])->name('association.switch');
+        Route::post('/set-primary-association', [AssociationSwitchController::class, 'setPrimary'])->name('association.set-primary');
+    });
 });

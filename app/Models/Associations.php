@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * 📁 EMPLACEMENT: app/Models/Associations.php
+ * 
+ * Modèle Associations avec support multi-utilisateurs
+ */
+
 namespace App\Models;
 
 use App\Models\Scopes\ModelScope;
@@ -36,6 +42,7 @@ class Associations extends Model
     {
         return $this->hasMany(Paroissien::class, 'association_id');
     }
+
     public function offrandes()
     {
         return $this->hasMany(Offrande::class, 'association_id');
@@ -131,14 +138,12 @@ class Associations extends Model
         $data["tauxDetteDimeR"] = round(100 * ($data["detteDimeR"]) / ($data["detteDime"] == 0 ? 1 : $data["detteDime"]), 2);
         $data["tauxDetteCotisationR"] = round(100 * ($data["detteCotisationR"]) / ($data["detteCotisation"] == 0 ? 1 : $data["detteCotisation"]), 2);
 
-
         return $data;
     }
 
     public static function newAssociation(array $data)
     {
         try {
-
             // check if the association exist
             $a = Associations::where("name", $data['nom'])->get();
 
@@ -156,9 +161,10 @@ class Associations extends Model
         }
     }
 
-    /**
-     * Relations many-to-many avec les utilisateurs
-     */
+    // ==========================================
+    // 🆕 MÉTHODES MULTI-UTILISATEURS
+    // ==========================================
+
     /**
      * Relations many-to-many avec les utilisateurs
      */
@@ -167,11 +173,11 @@ class Associations extends Model
         return $this->belongsToMany(
             User::class,
             'user_associations',
-            'association_id',          // ✅ Clé étrangère pour ce modèle
-            'user_id'                  // Clé étrangère pour le modèle lié
+            'association_id',
+            'user_id'
         )
-            ->withPivot('is_primary', 'role_in_association')
-            ->withTimestamps();
+        ->withPivot('is_primary', 'role_in_association')
+        ->withTimestamps();
     }
 
     /**
@@ -182,14 +188,14 @@ class Associations extends Model
         return $this->belongsToMany(
             User::class,
             'user_associations',
-            'association_id',          // ✅ Clé étrangère
+            'association_id',
             'user_id'
         )
-            ->withPivot('is_primary', 'role_in_association')
-            ->whereHas('roles', function ($query) {
-                $query->whereIn('name', ['gestionnaire', 'responsable_association']);
-            })
-            ->withTimestamps();
+        ->withPivot('is_primary', 'role_in_association')
+        ->whereHas('roles', function ($query) {
+            $query->whereIn('name', ['gestionnaire', 'responsable_association']);
+        })
+        ->withTimestamps();
     }
 
     /**

@@ -1,3 +1,4 @@
+<!-- @livewire('association-selector') -->
 <header class="d_flex ai_center jc_between">
     <div class="header_left d_flex ai_center jc_center">
         <i class="fa-solid fa-bars js_toggle"></i>
